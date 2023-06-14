@@ -38,6 +38,7 @@ for i, j in notebook_dict.items():
 
 notebook_final = []
 for i in notebook_sort:
+    i = list(dict().fromkeys(i))
     for j in i:
         if j[0] == '+':
             if j.count('доб'):
@@ -52,7 +53,14 @@ for i in notebook_sort:
 
     notebook_final.append(i)
 
+pattern_final = r'([А-Я]\w+),(\w+),(\w+),(\w+),([А-Яа-яA-za-z –]+)?([0-9\+\(\)-]+ ?\w+\.?\d+)'
+subst_pattern_final = r'\1,\2,\3,\4,\5,\6'
+sorted_list = []
+
+for i in notebook_final:
+    result = re.sub(pattern_final, subst_pattern_final, ','.join(i))
+    sorted_list.append(result.split(','))
 
 with open("phonebook.csv", "w", encoding="utf8") as f:
     datawriter = csv.writer(f, delimiter=',')
-    datawriter.writerows(notebook_final)
+    datawriter.writerows(sorted_list)
